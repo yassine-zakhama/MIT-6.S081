@@ -1,0 +1,30 @@
+BasedOnStyle: LLVM
+Language: C
+
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+PointerAlignment: Left
+
+BreakBeforeBraces: Attach
+IndentCaseLabels: true
+
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+
+BraceWrapping:
+  AfterControlStatement: false
+  AfterFunction: false
+  BeforeElse: false
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+ColumnLimit: 120
+
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: DontAlign
+AlwaysBreakBeforeMultilineInitializers: true
+AllowAllConstructorInitializersOnNextLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
