@@ -6,14 +6,11 @@ int main() {
   int p[2];
   pipe(p);
 
-  int pid = fork();
-  int p_id = getpid();
-
-  if (pid == 0) {
+  if (fork() == 0) {
     char buff[5];
     read(p[0], buff, 5);
     close(p[0]);
-    printf("%d: received %s\n", p_id, buff);
+    printf("%d: received %s\n", getpid(), buff);
     write(p[1], "pong", 5);
     close(p[1]);
   } else {
@@ -22,7 +19,7 @@ int main() {
     wait(0);
     char buff[5];
     read(p[0], buff, 5);
-    printf("%d: received %s\n", p_id, buff);
+    printf("%d: received %s\n", getpid(), buff);
     close(p[0]);
   }
 
