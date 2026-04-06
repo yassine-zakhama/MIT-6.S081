@@ -1,5 +1,32 @@
 {
   "[c]": {
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "forkret",
+    "growproc",
+    "hartid",
+    "havekids",
+    "intena",
+    "interruptible",
+    "kfree",
+    "kstack",
+    "kvminithart",
+    "PGSIZE",
+    "reparent",
+    "rtcdate",
+    "safestrcpy",
+    "satp",
+    "tickslock",
+    "usertrapret",
+    "uvmalloc",
+    "uvmcopy",
+    "uvmcreate",
+    "uvmdealloc",
+    "uvmfree",
+    "uvminit",
+    "uvmunmap",
+    "xstate",
+    "xticks"
+  ]
 }
