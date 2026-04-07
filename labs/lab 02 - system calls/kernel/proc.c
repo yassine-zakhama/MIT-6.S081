@@ -15,6 +15,11 @@ struct proc *initproc;
 int nextpid = 1;
 struct spinlock pid_lock;
 
+struct {
+    struct spinlock lock;
+    uint64 nunused;      // number of UNUSED processes
+} proc_counter;
+
 extern void forkret(void);
 static void wakeup1(struct proc *chan);
 static void freeproc(struct proc *p);
@@ -25,6 +30,11 @@ extern char trampoline[]; // trampoline.S
 void
 procinit(void)
 {
+  initlock(&proc_counter.lock, "proc_counter");
+  acquire(&proc_counter.lock);
+  proc_counter.nunused = NPROC;
+  release(&proc_counter.lock);
+
   struct proc *p;
   
   initlock(&pid_lock, "nextpid");
@@ -97,6 +107,10 @@ allocproc(void)
   for(p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
     if(p->state == UNUSED) {
+      acquire(&proc_counter.lock);
+      --proc_counter.nunused;
+      release(&proc_counter.lock);
+
       goto found;
     } else {
       release(&p->lock);
@@ -136,6 +150,9 @@ found:
 static void
 freeproc(struct proc *p)
 {
+  acquire(&proc_counter.lock);
+  ++proc_counter.nunused;
+  release(&proc_counter.lock);
   if(p->trapframe)
     kfree((void*)p->trapframe);
   p->trapframe = 0;
@@ -694,4 +711,13 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+uint64
+nunusedproc(void)
+{
+  acquire(&proc_counter.lock);
+  uint64 n = NPROC - proc_counter.nunused;
+  release(&proc_counter.lock);
+  return n;
 }
