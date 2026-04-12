@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "name": "RISC-V GCC",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/include",
+        "/opt/riscv32/include",
+        "/opt/riscv32/riscv32-unknown-elf/include"
+      ],
+      "defines": ["__riscv", "LAB_FS"],
+      "compilerPath": "/opt/riscv32/bin/riscv32-unknown-elf-gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x64"
+    }
+  ],
+  "version": 4
+}

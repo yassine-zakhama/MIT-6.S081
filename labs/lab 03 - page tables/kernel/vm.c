@@ -111,6 +111,44 @@ walkaddr(pagetable_t pagetable, uint64 va)
   return pa;
 }
 
+void
+kvmmapkern(pagetable_t pagetable, uint64 va, uint64 pa, uint64 sz, int perm)
+{
+  if(mappages(pagetable, va, sz, pa, perm) != 0)
+    panic("kvmmapkern");
+}
+
+pagetable_t
+kvmcreate()
+{
+  pagetable_t pagetable = uvmcreate();
+  kvmmapkern(pagetable, UART0, UART0, PGSIZE, PTE_R | PTE_W);
+  kvmmapkern(pagetable, VIRTIO0, VIRTIO0, PGSIZE, PTE_R | PTE_W);
+  kvmmapkern(pagetable, CLINT, CLINT, 0x10000, PTE_R | PTE_W);
+  kvmmapkern(pagetable, PLIC, PLIC, 0x400000, PTE_R | PTE_W);
+  for (int i = 1; i < 512; i++) {
+    pagetable[i] = kernel_pagetable[i];
+  }
+  return pagetable;
+}
+
+void 
+kvmfree(pagetable_t kpagetale, uint64 sz) 
+{
+  pte_t pte = kpagetale[0];
+  pagetable_t level1 = (pagetable_t) PTE2PA(pte);
+  for (int i = 0; i < 512; i++) {
+    pte_t pte = level1[i];
+    if (pte & PTE_V) {
+      uint64 level2 = PTE2PA(pte);
+      kfree((void *) level2);
+      level1[i] = 0;
+    }
+  }
+  kfree((void *) level1);
+  kfree((void *) kpagetale);
+}
+
 // add a mapping to the kernel page table.
 // only used when booting.
 // does not flush TLB or enable paging.
