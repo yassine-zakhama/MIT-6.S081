@@ -235,6 +235,8 @@ userinit(void)
 
   p->state = RUNNABLE;
 
+  kvmmapuser(p->pid, p->kpagetable, p->pagetable, p->sz, 0);
+
   release(&p->lock);
 }
 
@@ -254,6 +256,7 @@ growproc(int n)
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
   }
+  kvmmapuser(p->pid, p->kpagetable, p->pagetable, sz, p->sz);
   p->sz = sz;
   return 0;
 }
@@ -299,6 +302,8 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+
+  kvmmapuser(np->pid, np->kpagetable, np->pagetable, np->sz, 0);
 
   release(&np->lock);
 

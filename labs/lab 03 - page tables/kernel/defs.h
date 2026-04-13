@@ -162,6 +162,7 @@ void            kvminit(void);
 void            kvminithart(void);
 pagetable_t     kvmcreate(void);
 void            kvmfree(pagetable_t, uint64);
+void            kvmmapuser(int, pagetable_t, pagetable_t, uint64, uint64);
 uint64          kvmpa(uint64);
 void            kvmmap(uint64, uint64, uint64, int);
 int             mappages(pagetable_t, uint64, uint64, uint64, int);
@@ -226,3 +227,7 @@ int             sockread(struct sock *, uint64, int);
 int             sockwrite(struct sock *, uint64, int);
 void            sockrecvudp(struct mbuf*, uint32, uint16, uint16);
 #endif
+
+// vmcopyin.c
+int             copyin_new(pagetable_t, char*, uint64, uint64);
+int             copyinstr_new(pagetable_t, char*, uint64, uint64);
